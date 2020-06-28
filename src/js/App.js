@@ -7,10 +7,21 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.form = React.createRef();
-        this.state = {
-            nextId: 0,
-            alunos: []
+
+        const storageState = localStorage.getItem('state');
+        if (storageState) {
+            this.state = JSON.parse(storageState);
         }
+        else {
+            this.state = {
+                nextId: 0,
+                alunos: []
+            }
+        }
+    }
+    
+    componentDidUpdate = () => {
+        localStorage.setItem('state', JSON.stringify(this.state));
     }
 
     salvarAluno = (aluno) => {
