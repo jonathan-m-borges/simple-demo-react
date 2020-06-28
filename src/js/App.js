@@ -2,7 +2,6 @@ import React from 'react';
 
 import FormAluno from './FormAlunos';
 import ListaAlunos from './ListaAlunos';
-import Aluno from './models/Aluno';
 
 class App extends React.Component {
     constructor(props) {
@@ -15,16 +14,22 @@ class App extends React.Component {
     }
 
     salvarAluno = (aluno) => {
-        const nextId = this.state.nextId + 1;
-        aluno.id = nextId;
-        this.setState({ nextId, alunos: [...this.state.alunos, aluno] });
+        if (aluno.id == 0) {
+            const nextId = this.state.nextId + 1;
+            aluno.id = nextId;
+            this.setState({ nextId, alunos: [...this.state.alunos, aluno] });
+        }
+        else {
+            const index = this.state.alunos.findIndex(x => x.id == aluno.id);
+            const alunos = [...this.state.alunos];
+            alunos[index] = aluno;
+            this.setState({ alunos });
+        }
     }
 
     editarAluno = (e, aluno) => {
         e.preventDefault();
-        console.log(aluno);
-        debugger;
-        this.form.abrir(aluno);
+        this.form.current.abrir(aluno);
     }
 
     excluirAluno = (e, aluno) => {
@@ -37,7 +42,7 @@ class App extends React.Component {
         return (
             <div>
                 <FormAluno ref={this.form} salvarAluno={this.salvarAluno} />
-                <ListaAlunos alunos={this.state.alunos} excluirAluno={this.excluirAluno} editarAluno={this.editarAluno}/>
+                <ListaAlunos alunos={this.state.alunos} excluirAluno={this.excluirAluno} editarAluno={this.editarAluno} />
             </div>
         )
     }
